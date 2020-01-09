@@ -5,6 +5,8 @@ from pandas import *
 from bokeh.io import show
 from bokeh.models import DatetimeTickFormatter
 from bokeh.plotting import figure
+from bokeh.embed import file_html
+from bokeh.resources import CDN
 from datetime import datetime as dt
 
 app = Flask(__name__)
@@ -31,14 +33,17 @@ def index():
             months=["%d %B %Y"],
             years=["%d %B %Y"],
             )
-            show(p)
+            html = file_html(p, CDN, "myPlot")
+            file = open("templates/plot.html","w")
+            file.write(html)
+            file.close()
         except:
             return render_template('about.html')
-        return render_template('index.html')
+        return render_template('plot.html')
 
 @app.route('/about')
 def about():
     return render_template('about.html')
 
 if __name__ == '__main__':
-  app.run(port=33507)
+  app.run(port=33507,debug=True)
